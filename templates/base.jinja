@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+{% set lang_code = request.LANGUAGE_CODE or 'en' %}
+<html lang="{{ lang_code }}" dir="{% if lang_code.startswith('ur') %}rtl{% else %}ltr{% endif %}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{{ static('images/favicon.ico') }}" type="image/x-icon">
+
+  <title>{% block title %}Lafzverse{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ static('css/styles.css') }}">
+</head>
+<body class="bg-ink text-slate-100 min-h-screen">
+  <div class="aurora"></div>
+  {% include 'partials/navbar.jinja' %}
+
+  {% if messages %}
+    <div class="max-w-6xl mx-auto px-4 mt-4">
+      {% for message in messages %}
+        <div class="toast">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <main class="max-w-6xl mx-auto px-4 py-10">
+    {% block content %}{% endblock %}
+  </main>
+
+  <div class="hidden">
+    {{ csrf_input }}
+  </div>
+
+  {% include 'partials/footer.jinja' %}
+
+  {% set i18n_strings = {
+    'languageLabels': {'hi': t('Hindi'), 'en': t('English'), 'ur': t('Urdu')},
+    'translateTo': t('Translate → {language}'),
+    'translating': t('Translating...'),
+    'translationUnavailable': t('Translation service unavailable. Configure the provider in .env.'),
+    'loginToLike': t('Please login to like shayaris.'),
+    'loginToSave': t('Please login to save shayaris.'),
+    'showPassword': t('Show password'),
+    'hidePassword': t('Hide password'),
+    'saved': t('Saved'),
+    'save': t('Save'),
+    'copied': t('Copied'),
+    'copy': t('Copy'),
+    'copyFailed': t('Copy failed.'),
+    'linkCopied': t('Link copied to clipboard.')
+  } %}
+  <script>
+    window.LAFZVERSE_I18N = {{ i18n_strings | tojson }};
+  </script>
+  {% if firebase_enabled %}
+    <script>
+      window.FIREBASE_CONFIG = {{ firebase_config | tojson }};
+      window.FIREBASE_REQUIRE_EMAIL_VERIFIED = {{ 'true' if firebase_require_email_verified else 'false' }};
+    </script>
+    <script type="module" src="{{ static('js/firebase-auth.js') }}"></script>
+  {% endif %}
+  <script src="{{ static('js/app.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,36 @@
+{% extends 'base.jinja' %}
+
+{% block title %}Lafzverse | {{ t('Browse') }}{% endblock %}
+
+{% block content %}
+<section class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+  <div>
+    <p class="tag">{{ t('Browse') }}</p>
+    <h1 class="text-3xl font-display">{{ t('Find the words that match your mood.') }}</h1>
+  </div>
+  <form method="get" class="filter-form">
+    <input id="search" class="input" type="search" name="q" placeholder="{{ t('Search title, text, author') }}" value="{{ query }}">
+    <select class="input" name="category">
+      <option value="">{{ t('All categories') }}</option>
+      {% for category in categories %}
+        <option value="{{ category.slug }}" {% if category_filter == category.slug %}selected{% endif %}>{{ category.name }}</option>
+      {% endfor %}
+    </select>
+    <input class="input" type="text" name="author" placeholder="{{ t('Author') }}" value="{{ author_query }}">
+    <select class="input" name="sort">
+      <option value="latest" {% if sort == 'latest' %}selected{% endif %}>{{ t('Latest') }}</option>
+      <option value="popular" {% if sort == 'popular' %}selected{% endif %}>{{ t('Most Liked') }}</option>
+      <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>{{ t('Oldest') }}</option>
+    </select>
+    <button class="btn-primary" type="submit">{{ t('Filter') }}</button>
+  </form>
+</section>
+
+<section class="mt-10 grid md:grid-cols-2 gap-6">
+  {% for shayari in shayaris %}
+    {% include 'partials/shayari_card.jinja' %}
+  {% else %}
+    <p class="text-slate-400">{{ t('No shayaris matched your filters.') }}</p>
+  {% endfor %}
+</section>
+{% endblock %}

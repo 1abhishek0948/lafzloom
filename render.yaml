@@ -1,0 +1,60 @@
+services:
+  - type: web
+    name: lafzverse-web
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: ./scripts/entrypoint.sh
+    autoDeploy: true
+    healthCheckPath: /healthz/
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: DEBUG
+        value: "0"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: CSRF_TRUSTED_ORIGINS
+        sync: false
+      - key: WEB_CONCURRENCY
+        value: "1"
+      - key: GUNICORN_TIMEOUT
+        value: "120"
+      - key: EMAIL_BACKEND
+        value: django.core.mail.backends.smtp.EmailBackend
+      - key: OTP_EMAIL_PROVIDER
+        value: resend
+      - key: EMAIL_HOST
+        sync: false
+      - key: EMAIL_PORT
+        value: "587"
+      - key: EMAIL_USE_TLS
+        value: "1"
+      - key: EMAIL_TIMEOUT
+        value: "15"
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM_EMAIL
+        sync: false
+      - key: SESSION_COOKIE_SECURE
+        value: "1"
+      - key: CSRF_COOKIE_SECURE
+        value: "1"
+      - key: SECURE_SSL_REDIRECT
+        value: "1"
+      - key: SECURE_HSTS_SECONDS
+        value: "31536000"
+      - key: SECURE_HSTS_INCLUDE_SUBDOMAINS
+        value: "1"
+      - key: SECURE_HSTS_PRELOAD
+        value: "1"

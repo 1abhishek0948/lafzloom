@@ -1,0 +1,80 @@
+{% set current_lang = request.LANGUAGE_CODE or 'en' %}
+{% if current_lang.startswith('hi') %}
+  {% set current_lang_label = 'हिंदी' %}
+{% elif current_lang.startswith('ur') %}
+  {% set current_lang_label = 'اردو' %}
+{% else %}
+  {% set current_lang_label = 'English' %}
+{% endif %}
+<header dir="ltr" class="sticky top-0 z-40 backdrop-blur-md border-b border-white/10 relative">
+  <div class="max-w-6xl mx-auto px-4 py-3 sm:py-4 flex items-center justify-between md:grid md:grid-cols-[auto_1fr_auto] md:items-center md:gap-4">
+    <a href="{{ url('home') }}" class="flex items-center gap-2 sm:gap-3 min-w-0">
+       <div class="logo-mark p-[2px]">
+        <img 
+          src="{{ static('images/logo.png') }}" 
+          alt="Lafzverse Logo" 
+          class="w-full h-full object-contain rounded-full"
+        >
+      </div>
+      <div class="min-w-0">
+        <p class="text-lg sm:text-xl font-display leading-tight truncate">Lafzverse</p>
+        <p class="text-xs text-slate-300 hidden sm:block">Poetry that breathes</p>
+      </div>
+    </a>
+    <nav class="hidden md:flex items-center justify-center gap-6 text-sm">
+      <a class="nav-link" href="{{ url('home') }}">Home</a>
+      <a class="nav-link" href="{{ url('shayari:list') }}">Browse</a>
+      <a class="nav-link" href="{{ url('shayari:submit') }}">Upload</a>
+      <a class="nav-link hidden md:inline-flex" href="{{ url('accounts:profile') }}#saved">Saved</a>
+
+    </nav>
+    <div class="flex items-center gap-2 sm:gap-3 md:justify-end">
+      <div class="lang-dropdown">
+      <button class="lang-toggle shrink-0" type="button" aria-label="Language {{ current_lang_label }}" aria-expanded="false" aria-controls="mobile-lang-menu">
+        {{ current_lang_label }}
+        <svg class="lang-toggle-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          <path d="M5.25 7.5 10 12.25 14.75 7.5" fill="currentColor"/>
+        </svg>
+      </button>
+        <div id="mobile-lang-menu" class="mobile-lang-menu hidden">
+          <div class="mobile-lang-menu-inner">
+            <p class="mobile-lang-title">Language</p>
+            <div class="mobile-lang">
+              <form method="post" action="{{ url('set_language') }}">
+                {{ csrf_input }}
+                <input type="hidden" name="next" value="{{ request.get_full_path() }}">
+                <button class="lang-btn {% if request.LANGUAGE_CODE.startswith('en') %}is-active{% endif %}" type="submit" name="language" value="en">English</button>
+              </form>
+              <form method="post" action="{{ url('set_language') }}">
+                {{ csrf_input }}
+                <input type="hidden" name="next" value="{{ request.get_full_path() }}">
+                <button class="lang-btn {% if request.LANGUAGE_CODE.startswith('hi') %}is-active{% endif %}" type="submit" name="language" value="hi">हिंदी</button>
+              </form>
+              <form method="post" action="{{ url('set_language') }}">
+                {{ csrf_input }}
+                <input type="hidden" name="next" value="{{ request.get_full_path() }}">
+                <button class="lang-btn {% if request.LANGUAGE_CODE.startswith('ur') %}is-active{% endif %}" type="submit" name="language" value="ur">اردو</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% if request.user.is_authenticated %}
+        {% if request.user.is_staff %}
+          <a class="nav-link hidden md:inline-flex" href="{{ url('moderation:pending') }}">Manage</a>
+        {% endif %}
+        <a class="profile-btn inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 text-slate-100 hover:border-white/40" href="{{ url('accounts:profile') }}" aria-label="Profile" title="Profile">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2-8 4.5V21h16v-2.5C20 16 16.42 14 12 14Z"/>
+          </svg>
+        </a>
+      {% else %}
+        <a class="btn-ghost hidden md:inline-flex" href="{{ url('accounts:login') }}">Login</a>
+        <a class="btn-primary hidden md:inline-flex" href="{{ url('accounts:register') }}">Get Started</a>
+      {% endif %}
+      {% if not request.user.is_authenticated %}
+        <a class="btn-primary btn-compact md:hidden mobile-getstart shrink-0" href="{{ url('accounts:register') }}">Get Started</a>
+      {% endif %}
+    </div>
+  </div>
+</header>

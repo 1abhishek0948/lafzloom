@@ -1,0 +1,42 @@
+{% extends 'base.jinja' %}
+
+{% block title %}{{ shayari.title }} | Lafzverse{% endblock %}
+
+{% block content %}
+<article class="card-glow">
+  <div class="flex items-start justify-between">
+    <div>
+      <p class="text-sm text-slate-400">{{ shayari.category.name }} · {{ shayari.created_at|date('M d, Y') }}</p>
+      <h1 class="text-3xl font-display mt-2">{{ shayari.title }}</h1>
+      <p class="text-sm text-slate-400 mt-2">{{ t('by') }} @{{ shayari.author.username }}</p>
+    </div>
+    <span class="lang-pill">{{ shayari.get_language_display() }}</span>
+  </div>
+
+  <p class="mt-6 text-lg whitespace-pre-line">{{ shayari.text }}</p>
+  <textarea class="shayari-text hidden" aria-hidden="true">{{ shayari.text }}</textarea>
+
+  <div class="mt-6 flex flex-wrap gap-3">
+    <button class="btn-like" data-like-url="{{ url('shayari:like', pk=shayari.pk) }}" data-shayari-id="{{ shayari.pk }}">
+      ❤ <span class="like-count">{{ shayari.likes.count() }}</span>
+    </button>
+    <button class="btn-save" data-save-url="{{ url('shayari:save', pk=shayari.pk) }}" data-shayari-id="{{ shayari.pk }}">{{ t('Save') }}</button>
+    <button class="btn-translate" data-source-lang="{{ shayari.language }}" data-target-lang="en">{{ t('Translate') }}</button>
+    <button class="btn-copy">{{ t('Copy') }}</button>
+    <button class="btn-share" data-share-url="{{ request.build_absolute_uri() }}">{{ t('Share') }}</button>
+  </div>
+
+  {% if request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser or request.user == shayari.author) %}
+    <div class="mt-4 flex flex-wrap gap-3">
+      <a class="btn-ghost" href="{{ url('shayari:edit', pk=shayari.pk) }}">{{ t('Edit') }}</a>
+      <form method="post" action="{{ url('shayari:delete', pk=shayari.pk) }}" onsubmit="return confirm('{{ t('Delete this shayari?') }}');">
+        {{ csrf_input }}
+        <input type="hidden" name="next" value="{{ url('shayari:list') }}">
+        <button class="btn-danger" type="submit">{{ t('Delete') }}</button>
+      </form>
+    </div>
+  {% endif %}
+
+  <div class="translation-output mt-6 hidden"></div>
+</article>
+{% endblock %}

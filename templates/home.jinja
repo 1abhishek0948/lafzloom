@@ -1,0 +1,45 @@
+{% extends 'base.jinja' %}
+
+{% block title %}Lafzverse | {{ t('Home') }}{% endblock %}
+
+{% block content %}
+<section class="grid lg:grid-cols-2 gap-10 items-center">
+  <div>
+    <p class="tag">{{ t('Discover | Translate | Share') }}</p>
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-display leading-tight">{{ t('A universe of shayari, curated by emotion.') }}</h1>
+    <p class="mt-4 text-slate-300 text-base sm:text-lg">{{ t('Browse new verses, save your favorites, and translate poetry between Hindi, English, and Urdu without losing the soul.') }}</p>
+    <div class="mt-6 flex flex-wrap gap-4 ">
+      <a class="btn-primary" href="{{ url('shayari:list') }}">{{ t('Explore') }}</a>
+      <a class="btn-ghost" href="{{ url('shayari:submit') }}">{{ t('Upload') }}</a>
+      <a class="btn-ghost" href="{{ url('shayari:list') }}#search">{{ t('Search') }}</a>
+    </div>
+  </div>
+  <div class="card-glow">
+    <h2 class="font-display text-xl sm:text-2xl">{{ t("Today's moodboard") }}</h2>
+    <div class="mt-4 flex flex-wrap gap-3">
+      {% for category in categories %}
+        <a class="chip" href="{{ url('shayari:list_by_category', category_slug=category.slug) }}">#{{ category.name }}</a>
+      {% else %}
+        <p class="text-slate-400">{{ t('No categories yet. Seed data to get started.') }}</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="mt-12">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="section-title">{{ t('Latest Shayaris') }}</h2>
+    <a class="text-sm text-slate-300 hover:text-white" href="{{ url('shayari:list') }}">{{ t('View all') }}</a>
+  </div>
+  <div class="shayari-scroll-grid grid md:grid-cols-2 gap-6">
+    {% for shayari in shayaris %}
+      {% include 'partials/shayari_card.jinja' %}
+    {% else %}
+      <p class="text-slate-400">{{ t('No shayaris yet.') }}</p>
+    {% endfor %}
+  </div>
+  <div class="mt-6 flex justify-center">
+    <a class="btn-ghost" href="{{ url('shayari:list') }}">{{ t('View all') }}</a>
+  </div>
+</section>
+{% endblock %}

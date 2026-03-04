@@ -1,0 +1,15 @@
+{% extends 'base.jinja' %}
+
+{% block title %}{{ t('About Us') }} | Lafzverse{% endblock %}
+
+{% block content %}
+<section class="max-w-3xl">
+  <p class="tag">{{ t('About') }}</p>
+  <h1 class="text-3xl font-display">{{ t('About Us') }}</h1>
+  <p class="mt-4 text-slate-300">{{ t('Lafzverse is a home for shayari lovers to share, save, and translate verses across Hindi, Urdu, and English.') }}</p>
+  <div class="mt-6 space-y-4 text-slate-300">
+    <p>{{ t('We believe poetry connects people through emotion, memory, and language.') }}</p>
+    <p>{{ t('Our goal is to make it easy to upload, discover, and celebrate new voices.') }}</p>
+  </div>
+</section>
+{% endblock %}

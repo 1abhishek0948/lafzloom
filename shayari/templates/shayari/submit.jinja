@@ -1,0 +1,33 @@
+{% extends 'base.jinja' %}
+
+{% block title %}{{ t('Upload') }} | Lafzverse{% endblock %}
+
+{% block content %}
+<section class="max-w-2xl">
+  <p class="tag">{{ t('Upload') }}</p>
+  <h1 class="text-3xl font-display">{{ t('Upload your verse to Lafzverse.') }}</h1>
+  <form method="post" class="mt-6 space-y-4 card">
+    {{ csrf_input }}
+    {% if form.errors %}
+      <div class="text-sm text-rose-200">{{ form.errors }}</div>
+    {% endif %}
+    <div>
+      <label class="label">{{ t('Title') }}</label>
+      {{ form.title }}
+    </div>
+    <div>
+      <label class="label">{{ t('Category') }}</label>
+      {{ form.category }}
+    </div>
+    <div>
+      <label class="label">{{ t('Language') }}</label>
+      {{ form.language }}
+    </div>
+    <div>
+      <label class="label">{{ t('Your Verse') }}</label>
+      {{ form.text }}
+    </div>
+    <button class="btn-primary" type="submit">{{ t('Upload Your Verse') }}</button>
+  </form>
+</section>
+{% endblock %}

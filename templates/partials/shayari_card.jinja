@@ -1,0 +1,23 @@
+<div class="card">
+  <div class="flex items-start justify-between">
+    <div>
+      <p class="text-sm text-slate-400">{{ shayari.category.name }} · {{ shayari.created_at|date('M d, Y') }}</p>
+      <h3 class="mt-1 text-xl font-display">
+        <a class="hover:underline" href="{{ url('shayari:detail', pk=shayari.pk) }}">{{ shayari.title }}</a>
+      </h3>
+    </div>
+    <span class="lang-pill">{{ shayari.get_language_display() }}</span>
+  </div>
+  <p class="mt-3 text-slate-200 whitespace-pre-line">{{ shayari.text|truncate(220) }}</p>
+  <textarea class="shayari-text hidden" aria-hidden="true">{{ shayari.text }}</textarea>
+  <div class="mt-4 flex flex-wrap gap-3 items-center">
+    <button class="btn-like" data-like-url="{{ url('shayari:like', pk=shayari.pk) }}" data-shayari-id="{{ shayari.pk }}">
+      ❤ <span class="like-count">{{ shayari.likes.count() }}</span>
+    </button>
+    <button class="btn-save" data-save-url="{{ url('shayari:save', pk=shayari.pk) }}" data-shayari-id="{{ shayari.pk }}">{{ t('Save') }}</button>
+    <button class="btn-translate" data-source-lang="{{ shayari.language }}" data-target-lang="en">{{ t('Translate') }}</button>
+    <button class="btn-copy">{{ t('Copy') }}</button>
+  </div>
+  <p class="mt-3 text-xs text-slate-400">{{ t('by') }} @{{ shayari.author.username }}</p>
+  <div class="translation-output mt-3 hidden"></div>
+</div>
