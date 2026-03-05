@@ -6,7 +6,6 @@ from django.urls import reverse
 from django.middleware.csrf import get_token
 from django.utils.html import format_html
 from django.utils.formats import date_format
-from django.conf import settings
 from lafzverse.translations import translate
 
 
@@ -30,9 +29,6 @@ def environment(**options):
             'url': url,
             'csrf_input': csrf_input,
             't': translate,
-            'firebase_config': getattr(settings, 'FIREBASE_WEB_CONFIG', {}),
-            'firebase_enabled': getattr(settings, 'FIREBASE_AUTH_ENABLED', False),
-            'firebase_require_email_verified': getattr(settings, 'FIREBASE_REQUIRE_EMAIL_VERIFIED', False),
         }
     )
     env.filters['date'] = lambda value, fmt='M d, Y': date_format(value, fmt, use_l10n=False)

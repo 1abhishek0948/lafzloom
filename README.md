@@ -14,6 +14,7 @@ A poetry/shayari platform built with Django, DRF, PostgreSQL, and TailwindCSS. U
 - Admin moderation panel and Django admin
 - REST API for shayari CRUD and translation
 - JWT auth for API + session auth for web
+- Email/password registration and login without OTP verification
 
 ## Local Setup
 
@@ -73,13 +74,11 @@ Set environment variables in Render:
 - `DEBUG=0`
 - `SECRET_KEY=<long-random-secret>`
 - `DATABASE_URL=<Render PostgreSQL Internal Database URL>`
-- `ALLOWED_HOSTS=<your-render-domain>`
-- `CSRF_TRUSTED_ORIGINS=https://<your-render-domain>`
-- `EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend` (required for OTP emails)
+- `ALLOWED_HOSTS=<your-render-domain>` (required only when using a custom domain)
+- `CSRF_TRUSTED_ORIGINS=https://<your-render-domain>` (required only when using a custom domain)
+- `EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend` (for password-reset email links)
 - `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `DEFAULT_FROM_EMAIL`
 - `EMAIL_TIMEOUT=15`
-- `OTP_EMAIL_PROVIDER=resend` (recommended on Render free plan)
-- `RESEND_API_KEY`, `RESEND_FROM_EMAIL`
 - `WEB_CONCURRENCY=1`
 - `GUNICORN_TIMEOUT=120`
 
@@ -96,12 +95,6 @@ If you attach a custom domain, add it to both `ALLOWED_HOSTS` and `CSRF_TRUSTED_
 
 For uploaded media persistence, add a Render Disk mounted at:
 - `/opt/render/project/src/media`
-
-### OTP Email Provider
-- `OTP_EMAIL_PROVIDER=smtp` uses Django SMTP settings.
-- `OTP_EMAIL_PROVIDER=resend` sends OTP emails via [Resend API](https://resend.com/docs/api-reference/emails/send) over HTTPS.
-
-If SMTP is blocked/unavailable in your hosting plan, use `resend`.
 
 ## API Endpoints
 - `GET /api/shayaris/` - list shayaris (filters: `q`, `category`, `author`, `sort=popular|latest|oldest`)

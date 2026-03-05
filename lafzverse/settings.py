@@ -169,8 +169,6 @@ else:
         }
     }
 
-OTP_EXPIRY_MINUTES = int(os.getenv('OTP_EXPIRY_MINUTES', '10'))
-
 EMAIL_BACKEND = os.getenv(
     'EMAIL_BACKEND',
     'django.core.mail.backends.console.EmailBackend' if DEBUG else 'django.core.mail.backends.smtp.EmailBackend',
@@ -189,9 +187,6 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'no-repl
 EMAIL_SSL_CERTFILE = os.getenv('EMAIL_SSL_CERTFILE') or None
 if not EMAIL_SSL_CERTFILE and certifi:
     EMAIL_SSL_CERTFILE = certifi.where()
-OTP_EMAIL_PROVIDER = os.getenv('OTP_EMAIL_PROVIDER', 'smtp').strip().lower()
-RESEND_API_KEY = os.getenv('RESEND_API_KEY', '').strip()
-RESEND_FROM_EMAIL = os.getenv('RESEND_FROM_EMAIL', DEFAULT_FROM_EMAIL).strip() or DEFAULT_FROM_EMAIL
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -268,18 +263,3 @@ X_FRAME_OPTIONS = os.getenv('X_FRAME_OPTIONS', 'DENY')
 
 TRANSLATION_PROVIDER = os.getenv('TRANSLATION_PROVIDER', 'mock')
 TRANSLATION_TIMEOUT_SECONDS = int(os.getenv('TRANSLATION_TIMEOUT_SECONDS', '20'))
-
-FIREBASE_WEB_CONFIG = {
-    'apiKey': os.getenv('FIREBASE_WEB_API_KEY', ''),
-    'authDomain': os.getenv('FIREBASE_AUTH_DOMAIN', ''),
-    'projectId': os.getenv('FIREBASE_PROJECT_ID', ''),
-    'appId': os.getenv('FIREBASE_APP_ID', ''),
-    'storageBucket': os.getenv('FIREBASE_STORAGE_BUCKET', ''),
-    'messagingSenderId': os.getenv('FIREBASE_MESSAGING_SENDER_ID', ''),
-    'measurementId': os.getenv('FIREBASE_MEASUREMENT_ID', ''),
-}
-FIREBASE_AUTH_ENABLED = all(
-    FIREBASE_WEB_CONFIG.get(key)
-    for key in ('apiKey', 'authDomain', 'projectId', 'appId')
-)
-FIREBASE_REQUIRE_EMAIL_VERIFIED = os.getenv('FIREBASE_REQUIRE_EMAIL_VERIFIED', '1') == '1'

@@ -1,3 +1,9 @@
+databases:
+  - name: lafzverse-db
+    plan: free
+    databaseName: lafzverse
+    user: lafzverse
+
 services:
   - type: web
     name: lafzverse-web
@@ -15,19 +21,15 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: DATABASE_URL
-        sync: false
-      - key: ALLOWED_HOSTS
-        sync: false
-      - key: CSRF_TRUSTED_ORIGINS
-        sync: false
+        fromDatabase:
+          name: lafzverse-db
+          property: connectionString
       - key: WEB_CONCURRENCY
         value: "1"
       - key: GUNICORN_TIMEOUT
         value: "120"
       - key: EMAIL_BACKEND
         value: django.core.mail.backends.smtp.EmailBackend
-      - key: OTP_EMAIL_PROVIDER
-        value: resend
       - key: EMAIL_HOST
         sync: false
       - key: EMAIL_PORT
@@ -41,10 +43,6 @@ services:
       - key: EMAIL_HOST_PASSWORD
         sync: false
       - key: DEFAULT_FROM_EMAIL
-        sync: false
-      - key: RESEND_API_KEY
-        sync: false
-      - key: RESEND_FROM_EMAIL
         sync: false
       - key: SESSION_COOKIE_SECURE
         value: "1"

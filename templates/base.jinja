@@ -54,13 +54,6 @@
   <script>
     window.LAFZVERSE_I18N = {{ i18n_strings | tojson }};
   </script>
-  {% if firebase_enabled %}
-    <script>
-      window.FIREBASE_CONFIG = {{ firebase_config | tojson }};
-      window.FIREBASE_REQUIRE_EMAIL_VERIFIED = {{ 'true' if firebase_require_email_verified else 'false' }};
-    </script>
-    <script type="module" src="{{ static('js/firebase-auth.js') }}"></script>
-  {% endif %}
   <script src="{{ static('js/app.js') }}"></script>
   {% block extra_js %}{% endblock %}
 </body>

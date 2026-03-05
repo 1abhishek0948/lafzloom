@@ -6,14 +6,13 @@
 <section class="max-w-md mx-auto">
   <p class="tag">{{ t('Welcome back') }}</p>
   <h1 class="text-3xl font-display">{{ t('Login to Lafzverse') }}</h1>
-  <form method="post" class="mt-6 space-y-4 card" data-firebase-auth="login">
+  <form method="post" class="mt-6 space-y-4 card">
     {{ csrf_input }}
-    <div class="text-sm hidden" data-auth-message></div>
     {% if form.non_field_errors() %}
       <div class="text-sm text-rose-200">{{ form.non_field_errors()|safe }}</div>
     {% endif %}
     <div>
-      <label class="label">{{ t('Email') if firebase_enabled else t('Email or Username') }}</label>
+      <label class="label">{{ t('Email or Username') }}</label>
       {{ form.username }}
       {% if form.username.errors %}
         <div class="text-sm text-rose-200">{{ form.username.errors|safe }}</div>

@@ -6,9 +6,8 @@
 <section class="max-w-md mx-auto">
   <p class="tag">{{ t('Join Lafzverse') }}</p>
   <h1 class="text-3xl font-display">{{ t('Create your account') }}</h1>
-  <form method="post" class="mt-6 space-y-4 card" data-firebase-auth="register">
+  <form method="post" class="mt-6 space-y-4 card">
     {{ csrf_input }}
-    <div class="text-sm hidden" data-auth-message></div>
     {% if form.non_field_errors() %}
       <div class="text-sm text-rose-200">{{ form.non_field_errors()|safe }}</div>
     {% endif %}
