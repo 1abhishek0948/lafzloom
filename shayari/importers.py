@@ -17,7 +17,10 @@ LANGUAGE_ALIASES = {
 }
 
 EXPECTED_COLUMNS = {'title', 'text', 'language', 'category', 'author'}
-REQUIRED_COLUMNS = {'title', 'text', 'language', 'category'}
+REQUIRED_COLUMNS = {'text'}
+DEFAULT_TITLE = 'Untitled'
+DEFAULT_CATEGORY = 'General'
+DEFAULT_LANGUAGE = Shayari.LANG_HI
 HEADER_ALIASES = {
     'title': 'title',
     'shayarititle': 'title',
@@ -126,13 +129,25 @@ def import_shayari_xlsx(file_obj, default_author, approve=False):
         if row is None:
             continue
 
-        title = _clean(row[column_indices['title']]) if column_indices['title'] < len(row) else ''
-        text = _clean(row[column_indices['text']]) if column_indices['text'] < len(row) else ''
+        title = (
+            _clean(row[column_indices['title']])
+            if 'title' in column_indices and column_indices['title'] < len(row)
+            else ''
+        )
+        text = (
+            _clean(row[column_indices['text']])
+            if 'text' in column_indices and column_indices['text'] < len(row)
+            else ''
+        )
         language_raw = (
-            _clean(row[column_indices['language']]) if column_indices['language'] < len(row) else ''
+            _clean(row[column_indices['language']])
+            if 'language' in column_indices and column_indices['language'] < len(row)
+            else ''
         )
         category_name = (
-            _clean(row[column_indices['category']]) if column_indices['category'] < len(row) else ''
+            _clean(row[column_indices['category']])
+            if 'category' in column_indices and column_indices['category'] < len(row)
+            else ''
         )
         author_raw = (
             _clean(row[column_indices['author']])
@@ -143,23 +158,26 @@ def import_shayari_xlsx(file_obj, default_author, approve=False):
         if not any([title, text, language_raw, category_name, author_raw]):
             continue
 
-        if not title or not text or not language_raw or not category_name:
+        if not text:
             result.skipped += 1
-            result.warnings.append(f'Row {row_num}: missing required field(s).')
+            result.warnings.append(f'Row {row_num}: missing text.')
             continue
 
+        title = title or DEFAULT_TITLE
         if len(title) > 200:
             result.skipped += 1
             result.warnings.append(f'Row {row_num}: title exceeds 200 characters.')
             continue
 
-        language = _resolve_language(language_raw)
+        language = _resolve_language(language_raw) if language_raw else DEFAULT_LANGUAGE
         if not language:
             result.skipped += 1
             result.warnings.append(
                 f"Row {row_num}: invalid language '{language_raw}' (use Hindi/English/Urdu)."
             )
             continue
+
+        category_name = category_name or DEFAULT_CATEGORY
 
         category = Category.objects.filter(name__iexact=category_name).first()
         if not category:

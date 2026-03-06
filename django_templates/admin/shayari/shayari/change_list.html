@@ -7,6 +7,8 @@
       Expected columns: <strong>Title</strong>, <strong>Text</strong>, <strong>Language</strong>,
       <strong>Category</strong>, <strong>Author</strong>.
       Language values: Hindi / English / Urdu.
+      Defaults: blank title → <strong>Untitled</strong>, blank category → <strong>General</strong>,
+      blank language → <strong>Hindi</strong>.
     </p>
     <form method="post" action="{{ xlsx_import_url }}" enctype="multipart/form-data" id="xlsx-upload-form">
       {% csrf_token %}

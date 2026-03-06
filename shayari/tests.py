@@ -104,3 +104,17 @@ class ShayariXlsxImportTests(TestCase):
         self.assertEqual(result.created, 0)
         self.assertEqual(result.skipped, 1)
         self.assertIn('invalid language', result.warnings[0].lower())
+
+    def test_import_applies_defaults_for_blank_title_category_language(self):
+        file_obj = self._build_xlsx([
+            ['', 'Line with defaults', '', '', ''],
+        ])
+
+        result = import_shayari_xlsx(file_obj, default_author=self.admin_user, approve=False)
+
+        self.assertEqual(result.created, 1)
+        self.assertEqual(result.skipped, 0)
+        shayari = Shayari.objects.get(text='Line with defaults')
+        self.assertEqual(shayari.title, 'Untitled')
+        self.assertEqual(shayari.language, 'hi')
+        self.assertEqual(shayari.category.name, 'General')
