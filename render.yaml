@@ -1,5 +1,5 @@
 databases:
-  - name: lafzverse-db
+  - name: lafzverse
     plan: free
     databaseName: lafzverse
     user: lafzverse
@@ -21,9 +21,7 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: DATABASE_URL
-        fromDatabase:
-          name: lafzverse-db
-          property: connectionString
+        sync: false
       - key: WEB_CONCURRENCY
         value: "1"
       - key: GUNICORN_TIMEOUT
