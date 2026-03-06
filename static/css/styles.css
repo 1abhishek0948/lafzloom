@@ -238,49 +238,56 @@ body {
 
 @media (max-width: 480px) {
   .nav-shell {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
+    gap: 0.45rem;
     align-items: center;
   }
 
   .nav-brand {
-    flex: 1 1 100%;
+    flex: 1 1 auto;
     min-width: 0;
+    gap: 0.45rem;
   }
 
   .brand-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   .nav-actions {
-    width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.4rem;
+    flex: 0 0 auto;
   }
 
-  .nav-actions .lang-dropdown,
-  .nav-actions .mobile-getstart {
-    flex: 1 1 0;
+  .logo-mark {
+    width: 36px;
+    height: 36px;
   }
 
   .nav-actions .lang-toggle,
   .nav-actions .mobile-getstart {
-    width: 100%;
+    width: auto;
     justify-content: center;
   }
 
+  .nav-actions .lang-toggle {
+    min-height: 34px;
+    padding: 0.3rem 0.55rem;
+    font-size: 0.72rem;
+    gap: 0.25rem;
+  }
+
   .mobile-getstart {
-    min-height: 40px;
-    padding-inline: 0.75rem;
+    min-height: 34px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.72rem;
+    white-space: nowrap;
   }
 
   .mobile-lang-menu {
-    left: 0;
+    left: auto;
     right: 0;
-    min-width: 0;
+    min-width: 180px;
   }
 }
 
