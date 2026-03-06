@@ -1,0 +1,65 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+  <div class="module aligned" style="margin-bottom: 16px; border-radius: 10px; padding: 12px 14px;">
+    <h2 style="margin-bottom: 10px;">Bulk Upload Shayaris (.xlsx)</h2>
+    <p style="margin-bottom: 10px;">
+      Expected columns: <strong>Title</strong>, <strong>Text</strong>, <strong>Language</strong>,
+      <strong>Category</strong>, <strong>Author</strong>.
+      Language values: Hindi / English / Urdu.
+    </p>
+    <form method="post" action="{{ xlsx_import_url }}" enctype="multipart/form-data" id="xlsx-upload-form">
+      {% csrf_token %}
+      <div id="drop-zone" style="border: 2px dashed #6b7280; border-radius: 10px; padding: 18px; margin-bottom: 10px; text-align: center; cursor: pointer;">
+        <p style="margin: 0 0 8px 0;"><strong>Drag & drop your .xlsx file here</strong></p>
+        <p style="margin: 0 0 8px 0;">or click to choose file</p>
+        {{ xlsx_import_form.xlsx_file }}
+      </div>
+      <div style="margin-bottom: 12px;">
+        {{ xlsx_import_form.approve }} {{ xlsx_import_form.approve.label_tag }}
+      </div>
+      <button type="submit" class="button default">Upload Excel</button>
+    </form>
+  </div>
+  {{ block.super }}
+
+  <script>
+    (function () {
+      const dropZone = document.getElementById("drop-zone");
+      const input = document.getElementById("id_xlsx_file");
+      if (!dropZone || !input) return;
+
+      input.style.display = "none";
+
+      dropZone.addEventListener("click", () => input.click());
+
+      dropZone.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        dropZone.style.borderColor = "#2563eb";
+        dropZone.style.background = "rgba(37, 99, 235, 0.08)";
+      });
+
+      dropZone.addEventListener("dragleave", () => {
+        dropZone.style.borderColor = "#6b7280";
+        dropZone.style.background = "transparent";
+      });
+
+      dropZone.addEventListener("drop", (event) => {
+        event.preventDefault();
+        dropZone.style.borderColor = "#6b7280";
+        dropZone.style.background = "transparent";
+        const files = event.dataTransfer.files;
+        if (!files || !files.length) return;
+        input.files = files;
+        const name = files[0].name || "Selected file";
+        dropZone.querySelector("p strong").textContent = name;
+      });
+
+      input.addEventListener("change", () => {
+        const file = input.files && input.files[0];
+        if (!file) return;
+        dropZone.querySelector("p strong").textContent = file.name;
+      });
+    })();
+  </script>
+{% endblock %}

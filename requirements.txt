@@ -10,3 +10,4 @@ indic-transliteration>=2.3,<3.0
 certifi>=2024.6.2
 whitenoise>=6.7,<7.0
 Jinja2>=3.1,<4.0
+openpyxl>=3.1,<4.0
