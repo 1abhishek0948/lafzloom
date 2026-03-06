@@ -59,6 +59,11 @@ class ShayariApiTests(TestCase):
         })
         self.assertIn(response.status_code, [401, 403])
 
+    def test_legacy_category_url_redirects_to_query_param(self):
+        response = self.client.get('/shayari/category/love/', follow=False)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['Location'], '/shayari/?category=love')
+
 
 @unittest.skipIf(Workbook is None, 'openpyxl is not installed in this environment')
 class ShayariXlsxImportTests(TestCase):

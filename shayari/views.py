@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Shayari, Category
@@ -20,12 +21,9 @@ def home(request):
     return render(request, 'home.jinja', {'categories': categories, 'shayaris': shayaris})
 
 
-def shayari_list(request, category_slug=None):
+def shayari_list(request):
     shayaris = Shayari.objects.filter(approved=True).select_related('author', 'category')
     categories = Category.objects.all()
-
-    if category_slug:
-        shayaris = shayaris.filter(category__slug=category_slug)
 
     query = request.GET.get('q', '')
     if query:
@@ -42,7 +40,7 @@ def shayari_list(request, category_slug=None):
     category = request.GET.get('category', '')
     if category:
         shayaris = shayaris.filter(category__slug=category)
-    category_filter = category or category_slug
+    category_filter = category
 
     sort = request.GET.get('sort', 'latest')
     if sort == 'popular':
@@ -58,13 +56,17 @@ def shayari_list(request, category_slug=None):
         {
             'shayaris': shayaris,
             'categories': categories,
-            'active_category': category_slug,
             'query': query,
             'author_query': author,
             'sort': sort,
             'category_filter': category_filter,
         },
     )
+
+
+def category_legacy_redirect(request, category_slug):
+    list_url = reverse('shayari:list')
+    return redirect(f'{list_url}?category={category_slug}')
 
 
 def shayari_detail(request, pk):

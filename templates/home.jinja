@@ -18,7 +18,7 @@
     <h2 class="font-display text-xl sm:text-2xl">{{ t("Today's moodboard") }}</h2>
     <div class="mt-4 flex flex-wrap gap-3">
       {% for category in categories %}
-        <a class="chip" href="{{ url('shayari:list_by_category', category_slug=category.slug) }}">#{{ category.name }}</a>
+        <a class="chip" href="{{ url('shayari:list') }}?category={{ category.slug }}">#{{ category.name }}</a>
       {% else %}
         <p class="text-slate-400">{{ t('No categories yet. Seed data to get started.') }}</p>
       {% endfor %}
