@@ -236,6 +236,54 @@ body {
   }
 }
 
+@media (max-width: 480px) {
+  .nav-shell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+  }
+
+  .nav-brand {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .brand-title {
+    font-size: 1.2rem;
+  }
+
+  .nav-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .nav-actions .lang-dropdown,
+  .nav-actions .mobile-getstart {
+    flex: 1 1 0;
+  }
+
+  .nav-actions .lang-toggle,
+  .nav-actions .mobile-getstart {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mobile-getstart {
+    min-height: 40px;
+    padding-inline: 0.75rem;
+  }
+
+  .mobile-lang-menu {
+    left: 0;
+    right: 0;
+    min-width: 0;
+  }
+}
+
 .lang-btn {
   border: 1px solid var(--line);
   color: #e2e8f0;
