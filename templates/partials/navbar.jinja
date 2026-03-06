@@ -7,8 +7,8 @@
   {% set current_lang_label = 'English' %}
 {% endif %}
 <header dir="ltr" class="sticky top-0 z-40 backdrop-blur-md border-b border-white/10 relative">
-  <div class="max-w-6xl mx-auto px-4 py-3 sm:py-4 flex items-center justify-between md:grid md:grid-cols-[auto_1fr_auto] md:items-center md:gap-4">
-    <a href="{{ url('home') }}" class="flex items-center gap-2 sm:gap-3 min-w-0">
+  <div class="nav-shell max-w-6xl mx-auto px-4 py-3 sm:py-4 flex items-center justify-between md:grid md:grid-cols-[auto_1fr_auto] md:items-center md:gap-4">
+    <a href="{{ url('home') }}" class="nav-brand flex items-center gap-2 sm:gap-3 min-w-0">
        <div class="logo-mark p-[2px]">
         <img 
           src="{{ static('images/logo.png') }}" 
@@ -17,7 +17,7 @@
         >
       </div>
       <div class="min-w-0">
-        <p class="text-lg sm:text-xl font-display leading-tight truncate">Lafzverse</p>
+        <p class="brand-title text-lg sm:text-xl font-display leading-tight truncate">Lafzverse</p>
         <p class="text-xs text-slate-300 hidden sm:block">Poetry that breathes</p>
       </div>
     </a>
@@ -28,7 +28,7 @@
       <a class="nav-link hidden md:inline-flex" href="{{ url('accounts:profile') }}#saved">Saved</a>
 
     </nav>
-    <div class="flex items-center gap-2 sm:gap-3 md:justify-end">
+    <div class="nav-actions flex items-center gap-2 sm:gap-3 md:justify-end">
       <div class="lang-dropdown">
       <button class="lang-toggle shrink-0" type="button" aria-label="Language {{ current_lang_label }}" aria-expanded="false" aria-controls="mobile-lang-menu">
         {{ current_lang_label }}
