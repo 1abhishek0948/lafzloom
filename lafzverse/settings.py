@@ -114,6 +114,9 @@ JINJA2_DIRS = [
     BASE_DIR / 'shayari' / 'templates',
     BASE_DIR / 'moderation' / 'templates',
 ]
+DJANGO_TEMPLATE_DIRS = [
+    BASE_DIR / 'django_templates',
+]
 
 TEMPLATES = [
     {
@@ -134,7 +137,7 @@ TEMPLATES = [
     },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': DJANGO_TEMPLATE_DIRS,
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
