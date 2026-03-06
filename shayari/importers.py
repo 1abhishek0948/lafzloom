@@ -18,6 +18,23 @@ LANGUAGE_ALIASES = {
 
 EXPECTED_COLUMNS = {'title', 'text', 'language', 'category', 'author'}
 REQUIRED_COLUMNS = {'title', 'text', 'language', 'category'}
+HEADER_ALIASES = {
+    'title': 'title',
+    'shayarititle': 'title',
+    'text': 'text',
+    'shayari': 'text',
+    'shayaritext': 'text',
+    'content': 'text',
+    'body': 'text',
+    'language': 'language',
+    'lang': 'language',
+    'category': 'category',
+    'cat': 'category',
+    'author': 'author',
+    'authorname': 'author',
+    'username': 'author',
+    'user': 'author',
+}
 
 
 @dataclass
@@ -34,7 +51,8 @@ def _clean(value):
 
 
 def _header_key(value):
-    return _clean(value).lower().replace(' ', '').replace('_', '')
+    raw = _clean(value).lower()
+    return ''.join(ch for ch in raw if ch.isalnum())
 
 
 def _resolve_language(raw_language: str):
@@ -67,20 +85,35 @@ def import_shayari_xlsx(file_obj, default_author, approve=False):
     except Exception as exc:
         raise ValueError('openpyxl is required to import .xlsx files.') from exc
 
-    workbook = load_workbook(filename=file_obj, read_only=True, data_only=True)
+    workbook = load_workbook(filename=file_obj, data_only=True)
     sheet = workbook.active
     rows = sheet.iter_rows(values_only=True)
-    header_row = next(rows, None)
+    header_row = None
+    header_row_num = 1
+    for row_number in range(1, 6):
+        candidate = next(rows, None)
+        if not candidate:
+            continue
+        normalized = {
+            HEADER_ALIASES.get(_header_key(value))
+            for value in candidate
+            if _header_key(value)
+        }
+        if normalized & REQUIRED_COLUMNS:
+            header_row = candidate
+            header_row_num = row_number
+            break
+
     if not header_row:
-        raise ValueError('The Excel file is empty.')
+        raise ValueError(
+            'Could not find header row. Expected columns: Title, Text, Language, Category, Author.'
+        )
 
     column_indices = {}
     for idx, header in enumerate(header_row):
-        key = _header_key(header)
-        for column in EXPECTED_COLUMNS:
-            if key == column:
-                column_indices[column] = idx
-                break
+        key = HEADER_ALIASES.get(_header_key(header))
+        if key and key in EXPECTED_COLUMNS and key not in column_indices:
+            column_indices[key] = idx
 
     missing = REQUIRED_COLUMNS - set(column_indices.keys())
     if missing:
@@ -89,7 +122,7 @@ def import_shayari_xlsx(file_obj, default_author, approve=False):
 
     result = ImportResult()
 
-    for row_num, row in enumerate(rows, start=2):
+    for row_num, row in enumerate(rows, start=header_row_num + 1):
         if row is None:
             continue
 
@@ -143,4 +176,5 @@ def import_shayari_xlsx(file_obj, default_author, approve=False):
         )
         result.created += 1
 
+    workbook.close()
     return result
