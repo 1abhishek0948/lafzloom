@@ -21,7 +21,9 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: lafzloom
+          property: connectionString
       - key: WEB_CONCURRENCY
         value: "1"
       - key: GUNICORN_TIMEOUT
@@ -54,4 +56,3 @@ services:
         value: "1"
       - key: SECURE_HSTS_PRELOAD
         value: "1"
-

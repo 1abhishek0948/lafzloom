@@ -1,4 +1,4 @@
-# Lafzverse
+# Lafzloom
 
 A poetry/shayari platform built with Django, DRF, PostgreSQL, and TailwindCSS. Users can browse, like, save, share, and submit shayaris. Admins can moderate submissions. A translation API supports Hindi ↔ English ↔ Urdu with pluggable providers.
 
@@ -164,5 +164,3 @@ It cycles translation targets based on the shayari language and updates the UI o
 Basic tests can be added in `shayari/tests.py`. (Optional)
 
 ---
-# lafzloom
-# lafzloom

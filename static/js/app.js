@@ -7,7 +7,7 @@ const getCookie = (name) => {
 
 const csrfToken = getCookie('csrftoken');
 
-const i18n = window.LAFZVERSE_I18N || {};
+const i18n = window.LAFZLOOM_I18N || {};
 const languages = ['hi', 'en', 'ur'];
 const languageLabels = i18n.languageLabels || { hi: 'Hindi', en: 'English', ur: 'Urdu' };
 const translateToTemplate = i18n.translateTo || 'Translate → {language}';

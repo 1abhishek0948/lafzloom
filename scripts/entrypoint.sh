@@ -16,10 +16,8 @@ GUNICORN_TIMEOUT="${GUNICORN_TIMEOUT:-120}"
 
 if [[ -d "${PROJECT_ROOT}/lafzloom" ]]; then
   APP_MODULE="lafzloom.wsgi:application"
-elif [[ -d "${PROJECT_ROOT}/lafzverse" ]]; then
-  APP_MODULE="lafzverse.wsgi:application"
 else
-  echo "Could not find Django project package (expected lafzloom/ or lafzverse/)." >&2
+  echo "Could not find Django project package (expected lafzloom/)." >&2
   exit 1
 fi
 

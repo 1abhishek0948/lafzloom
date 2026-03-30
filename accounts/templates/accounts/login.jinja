@@ -1,11 +1,11 @@
 {% extends 'base.jinja' %}
 
-{% block title %}{{ t('Login') }} | Lafzverse{% endblock %}
+{% block title %}{{ t('Login') }} | Lafzloom{% endblock %}
 
 {% block content %}
 <section class="max-w-md mx-auto">
   <p class="tag">{{ t('Welcome back') }}</p>
-  <h1 class="text-3xl font-display">{{ t('Login to Lafzverse') }}</h1>
+  <h1 class="text-3xl font-display">{{ t('Login to Lafzloom') }}</h1>
   <form method="post" class="mt-6 space-y-4 card">
     {{ csrf_input }}
     {% if form.non_field_errors() %}

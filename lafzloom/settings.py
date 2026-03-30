@@ -161,6 +161,15 @@ if DATABASE_URL:
         'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=not DEBUG)
     }
 else:
+    if not DEBUG:
+        required_db_envs = ['POSTGRES_DB', 'POSTGRES_USER', 'POSTGRES_PASSWORD', 'POSTGRES_HOST', 'POSTGRES_PORT']
+        missing_db_envs = [name for name in required_db_envs if not os.getenv(name)]
+        if missing_db_envs:
+            raise RuntimeError(
+                'Production database configuration is missing. '
+                'Set DATABASE_URL (recommended) or configure POSTGRES_DB, POSTGRES_USER, '
+                'POSTGRES_PASSWORD, POSTGRES_HOST, and POSTGRES_PORT.'
+            )
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
