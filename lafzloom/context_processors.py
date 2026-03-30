@@ -1,4 +1,4 @@
-from lafzverse.jinja2 import csrf_input as csrf_input_func
+from lafzloom.jinja2 import csrf_input as csrf_input_func
 
 
 def csrf_input(request):

@@ -8,7 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Shayari, Category
 from .forms import ShayariForm
-from lafzverse.translations import translate as t
+from lafzloom.translations import translate as t
 
 
 def home(request):

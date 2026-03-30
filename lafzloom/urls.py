@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from shayari.views import home
-from lafzverse import views as static_views
+from lafzloom import views as static_views
 
 urlpatterns = [
     path('', home, name='home'),

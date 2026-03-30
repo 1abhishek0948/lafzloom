@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = 'Seed the database with sample categories and shayaris.'
 
     def handle(self, *args, **options):
-        user, created = User.objects.get_or_create(username='demo', defaults={'email': 'demo@lafzverse.com'})
+        user, created = User.objects.get_or_create(username='demo', defaults={'email': 'demo@lafzloom.com'})
         if created:
             user.set_password('demo1234')
             user.save()

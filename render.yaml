@@ -1,12 +1,12 @@
 databases:
-  - name: lafzverse
+  - name: lafzloom
     plan: free
-    databaseName: lafzverse
-    user: lafzverse
+    databaseName: lafzloom
+    user: lafzloom
 
 services:
   - type: web
-    name: lafzverse-web
+    name: lafzloom-web
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt

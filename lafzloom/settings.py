@@ -106,7 +106,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'lafzverse.urls'
+ROOT_URLCONF = 'lafzloom.urls'
 
 JINJA2_DIRS = [
     BASE_DIR / 'templates',
@@ -124,14 +124,14 @@ TEMPLATES = [
         'DIRS': JINJA2_DIRS,
         'APP_DIRS': True,
         'OPTIONS': {
-            'environment': 'lafzverse.jinja2.environment',
+            'environment': 'lafzloom.jinja2.environment',
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
-                'lafzverse.context_processors.csrf_input',
+                'lafzloom.context_processors.csrf_input',
             ],
         },
     },
@@ -146,14 +146,14 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
-                'lafzverse.context_processors.csrf_input',
+                'lafzloom.context_processors.csrf_input',
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'lafzverse.wsgi.application'
-ASGI_APPLICATION = 'lafzverse.asgi.application'
+WSGI_APPLICATION = 'lafzloom.wsgi.application'
+ASGI_APPLICATION = 'lafzloom.asgi.application'
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 if DATABASE_URL:
@@ -164,9 +164,9 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('POSTGRES_DB', 'lafzverse'),
-            'USER': os.getenv('POSTGRES_USER', 'lafzverse'),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'lafzverse'),
+            'NAME': os.getenv('POSTGRES_DB', 'lafzloom'),
+            'USER': os.getenv('POSTGRES_USER', 'lafzloom'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'lafzloom'),
             'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
             'PORT': os.getenv('POSTGRES_PORT', '5432'),
         }
@@ -178,7 +178,7 @@ EMAIL_BACKEND = os.getenv(
 )
 EMAIL_ALLOW_INSECURE_TLS = env_bool('EMAIL_ALLOW_INSECURE_TLS', False)
 if DEBUG and EMAIL_ALLOW_INSECURE_TLS and EMAIL_BACKEND == 'django.core.mail.backends.smtp.EmailBackend':
-    EMAIL_BACKEND = 'lafzverse.email_backend.EmailBackend'
+    EMAIL_BACKEND = 'lafzloom.email_backend.EmailBackend'
 EMAIL_HOST = os.getenv('EMAIL_HOST', '')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
 EMAIL_USE_TLS = env_bool('EMAIL_USE_TLS', True)
@@ -186,7 +186,7 @@ EMAIL_USE_SSL = env_bool('EMAIL_USE_SSL', False)
 EMAIL_TIMEOUT = int(os.getenv('EMAIL_TIMEOUT', '15'))
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '').replace(' ', '')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'no-reply@lafzverse.com')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'no-reply@lafzloom.com')
 EMAIL_SSL_CERTFILE = os.getenv('EMAIL_SSL_CERTFILE') or None
 if not EMAIL_SSL_CERTFILE and certifi:
     EMAIL_SSL_CERTFILE = certifi.where()

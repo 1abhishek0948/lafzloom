@@ -15,9 +15,9 @@ services:
   db:
     image: postgres:16
     environment:
-      POSTGRES_DB: lafzverse
-      POSTGRES_USER: lafzverse
-      POSTGRES_PASSWORD: lafzverse
+      POSTGRES_DB: lafzloom
+      POSTGRES_USER: lafzloom
+      POSTGRES_PASSWORD: lafzloom
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

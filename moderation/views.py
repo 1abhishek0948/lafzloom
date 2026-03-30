@@ -4,7 +4,7 @@ from django.contrib import messages
 
 from shayari.forms import ShayariForm
 from shayari.models import Shayari
-from lafzverse.translations import translate as t
+from lafzloom.translations import translate as t
 
 
 @staff_member_required(login_url='accounts:login')

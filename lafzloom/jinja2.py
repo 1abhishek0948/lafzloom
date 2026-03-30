@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.middleware.csrf import get_token
 from django.utils.html import format_html
 from django.utils.formats import date_format
-from lafzverse.translations import translate
+from lafzloom.translations import translate
 
 
 def csrf_input(request):
