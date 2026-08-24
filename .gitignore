@@ -5,3 +5,5 @@ __pycache__/
 .env
 staticfiles/
 media/
+opencode.json
+/venv
