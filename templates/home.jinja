@@ -1,6 +1,6 @@
 {% extends 'base.jinja' %}
 
-{% block title %}Lafzloom | {{ t('Home') }}{% endblock %}
+{% block title %}{{ seo_title }}{% endblock %}
 
 {% block content %}
 <section class="grid lg:grid-cols-2 gap-10 items-center">
@@ -18,7 +18,7 @@
     <h2 class="font-display text-xl sm:text-2xl">{{ t("Today's moodboard") }}</h2>
     <div class="mt-4 flex flex-wrap gap-3">
       {% for category in categories %}
-        <a class="chip" href="{{ url('shayari:list') }}?category={{ category.slug }}">#{{ category.name }}</a>
+        <a class="chip" href="{{ url('category', category_slug=category.slug) }}">#{{ category.name }}</a>
       {% else %}
         <p class="text-slate-400">{{ t('No categories yet. Seed data to get started.') }}</p>
       {% endfor %}
@@ -29,7 +29,7 @@
 <section class="mt-12">
   <div class="flex items-center justify-between mb-4">
     <h2 class="section-title">{{ t('Latest Shayaris') }}</h2>
-    <a class="text-sm text-slate-300 hover:text-white" href="{{ url('shayari:list') }}">{{ t('View all') }}</a>
+    <a class="text-sm text-slate-300 hover:text-white" href="{{ url('shayari:list') }}">Browse all shayari</a>
   </div>
   <div class="shayari-scroll-grid grid md:grid-cols-2 gap-6 items-start">
     {% for shayari in shayaris %}
@@ -39,7 +39,7 @@
     {% endfor %}
   </div>
   <div class="mt-6 flex justify-center">
-    <a class="btn-ghost" href="{{ url('shayari:list') }}">{{ t('View all') }}</a>
+    <a class="btn-ghost" href="{{ url('shayari:list') }}">Browse all shayari</a>
   </div>
 </section>
 {% endblock %}

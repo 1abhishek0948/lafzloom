@@ -1,8 +1,9 @@
 {% extends 'base.jinja' %}
 
-{% block title %}Lafzloom | {{ t('Browse') }}{% endblock %}
+{% block title %}{{ seo_title }}{% endblock %}
 
 {% block content %}
+{% include 'partials/breadcrumbs.jinja' %}
 <section class="flex flex-col md:flex-row md:items-center justify-between gap-4">
   <div>
     <p class="tag">{{ t('Browse') }}</p>
@@ -33,4 +34,5 @@
     <p class="text-slate-400">{{ t('No shayaris matched your filters.') }}</p>
   {% endfor %}
 </section>
+{% include 'partials/pagination.jinja' %}
 {% endblock %}

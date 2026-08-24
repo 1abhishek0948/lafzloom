@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sitemaps',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'rest_framework',
@@ -132,6 +133,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
                 'lafzloom.context_processors.csrf_input',
+                'lafzloom.context_processors.seo',
             ],
         },
     },
@@ -147,6 +149,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
                 'lafzloom.context_processors.csrf_input',
+                'lafzloom.context_processors.seo',
             ],
         },
     },
@@ -275,3 +278,15 @@ X_FRAME_OPTIONS = os.getenv('X_FRAME_OPTIONS', 'DENY')
 
 TRANSLATION_PROVIDER = os.getenv('TRANSLATION_PROVIDER', 'mock')
 TRANSLATION_TIMEOUT_SECONDS = int(os.getenv('TRANSLATION_TIMEOUT_SECONDS', '20'))
+
+SITE_NAME = os.getenv('SITE_NAME', 'Lafzloom')
+SITE_URL = os.getenv('SITE_URL', '').rstrip('/')
+if not SITE_URL and render_hostname:
+    SITE_URL = f'https://{render_hostname}'
+SEO_DEFAULT_DESCRIPTION = os.getenv(
+    'SEO_DEFAULT_DESCRIPTION',
+    'Discover, write, save, and share Hindi, English, and Urdu shayari on Lafzloom.',
+)
+SEO_DEFAULT_IMAGE = os.getenv('SEO_DEFAULT_IMAGE', 'images/logo.png')
+GOOGLE_SITE_VERIFICATION = os.getenv('GOOGLE_SITE_VERIFICATION', '')
+BING_SITE_VERIFICATION = os.getenv('BING_SITE_VERIFICATION', '')

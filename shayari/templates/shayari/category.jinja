@@ -1,0 +1,28 @@
+{% extends 'base.jinja' %}
+
+{% block title %}{{ seo_title }}{% endblock %}
+
+{% block content %}
+{% include 'partials/breadcrumbs.jinja' %}
+<header class="max-w-3xl">
+  <p class="tag">{{ t('Browse') }}</p>
+  <h1 class="text-3xl sm:text-4xl font-display">{{ category.name }} Shayari</h1>
+  {% if category.description %}
+    <p class="mt-4 text-slate-300">{{ category.description }}</p>
+  {% else %}
+    <p class="mt-4 text-slate-300">Explore the latest {{ category.name }} shayari and poetry shared by Lafzloom writers.</p>
+  {% endif %}
+</header>
+
+<section class="mt-10" aria-labelledby="category-verses-heading">
+  <h2 id="category-verses-heading" class="section-title">Latest {{ category.name }} Shayari</h2>
+  <div class="mt-4 grid md:grid-cols-2 gap-6 items-start">
+    {% for shayari in shayaris %}
+      {% include 'partials/shayari_card.jinja' %}
+    {% else %}
+      <p class="text-slate-400">{{ t('No shayaris yet.') }}</p>
+    {% endfor %}
+  </div>
+</section>
+{% include 'partials/pagination.jinja' %}
+{% endblock %}

@@ -1,20 +1,25 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.sitemaps.views import sitemap
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from shayari.views import home
 from lafzloom import views as static_views
+from lafzloom.sitemaps import sitemap_items
 
 urlpatterns = [
     path('', home, name='home'),
     path('healthz/', static_views.healthz, name='healthz'),
+    path('robots.txt', static_views.robots_txt, name='robots_txt'),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemap_items()}, name='sitemap'),
     path('privacy/', static_views.privacy, name='privacy'),
     path('about/', static_views.about, name='about'),
     path('contact/', static_views.contact, name='contact'),
     path('terms/', static_views.terms, name='terms'),
     path('accounts/', include('accounts.urls')),
     path('shayari/', include('shayari.urls')),
+    path('category/<slug:category_slug>/', static_views.category_detail, name='category'),
     path('moderation/', include('moderation.urls')),
     path('api/', include('shayari.api_urls')),
     path('api/', include('translation.urls')),
@@ -26,3 +31,5 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = 'lafzloom.views.error_404'

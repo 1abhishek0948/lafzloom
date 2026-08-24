@@ -20,6 +20,24 @@ def url(view_name, *args, **kwargs):
     return reverse(view_name, args=args, kwargs=kwargs)
 
 
+def breadcrumb_jsonld(breadcrumbs, home_url):
+    items = [{'@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': home_url}]
+    items.extend(
+        {
+            '@type': 'ListItem',
+            'position': index,
+            'name': crumb['name'],
+            'item': crumb['url'],
+        }
+        for index, crumb in enumerate(breadcrumbs, start=2)
+    )
+    return Markup(json.dumps({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': items,
+    }, ensure_ascii=False).replace('<', '\\u003c'))
+
+
 def environment(**options):
     options.setdefault('autoescape', True)
     env = Environment(**options)
@@ -32,5 +50,8 @@ def environment(**options):
         }
     )
     env.filters['date'] = lambda value, fmt='M d, Y': date_format(value, fmt, use_l10n=False)
-    env.filters['tojson'] = lambda value: Markup(json.dumps(value))
+    env.filters['tojson'] = lambda value: Markup(
+        json.dumps(value, ensure_ascii=False).replace('<', '\\u003c')
+    )
+    env.filters['breadcrumb_jsonld'] = breadcrumb_jsonld
     return env

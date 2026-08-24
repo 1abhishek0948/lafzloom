@@ -1,14 +1,16 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
+from django.core.paginator import Paginator
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.utils.http import url_has_allowed_host_and_scheme
-from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 
 from .models import Shayari, Category
 from .forms import ShayariForm
 from lafzloom.translations import translate as t
+from lafzloom.views import absolute_url
 
 
 def home(request):
@@ -50,23 +52,37 @@ def shayari_list(request):
     else:
         shayaris = shayaris.order_by('-created_at')
 
+    page = Paginator(shayaris, 12).get_page(request.GET.get('page'))
+    browse_is_indexable = not any(key in request.GET for key in ('q', 'author', 'category', 'sort'))
+    canonical_path = reverse('shayari:list')
+    if browse_is_indexable and request.GET.get('page'):
+        canonical_path = f'{canonical_path}?page={request.GET["page"]}'
+    context = {
+        'seo_title': 'Browse Shayari and Poetry | Lafzloom',
+        'seo_description': 'Browse shayari by title, author, category, language, or popularity on Lafzloom.',
+        'seo_robots': 'index, follow' if browse_is_indexable else 'noindex, follow',
+        'canonical_url': absolute_url(request, canonical_path),
+        'seo_breadcrumbs': [{'name': 'Shayari', 'url': absolute_url(request, reverse('shayari:list')), 'position': 1}],
+    }
+    request.seo_overrides = context
     return render(
         request,
         'shayari/list.jinja',
         {
-            'shayaris': shayaris,
+            'shayaris': page.object_list,
+            'page_obj': page,
             'categories': categories,
             'query': query,
             'author_query': author,
             'sort': sort,
             'category_filter': category_filter,
+            **context,
         },
     )
 
 
 def category_legacy_redirect(request, category_slug):
-    list_url = reverse('shayari:list')
-    return redirect(f'{list_url}?category={category_slug}')
+    return redirect(f'{reverse("shayari:list")}?category={category_slug}')
 
 
 def shayari_detail(request, pk):
@@ -77,7 +93,46 @@ def shayari_detail(request, pk):
         shayari = get_object_or_404(base_qs.filter(Q(approved=True) | Q(author=request.user)), pk=pk)
     else:
         shayari = get_object_or_404(base_qs, pk=pk, approved=True)
-    return render(request, 'shayari/detail.jinja', {'shayari': shayari})
+    description = ' '.join(shayari.text.split())
+    if len(description) > 158:
+        description = f'{description[:157].rsplit(" ", 1)[0]}…'
+    canonical_url = absolute_url(request, reverse('shayari:detail', kwargs={'pk': shayari.pk}))
+    breadcrumbs = [
+        {'name': 'Shayari', 'url': absolute_url(request, reverse('shayari:list')), 'position': 1},
+        {'name': shayari.category.name, 'url': absolute_url(request, reverse('category', kwargs={'category_slug': shayari.category.slug})), 'position': 2},
+        {'name': shayari.title, 'url': canonical_url, 'position': 3},
+    ]
+    related_shayaris = (
+        Shayari.objects.filter(approved=True, category=shayari.category)
+        .exclude(pk=shayari.pk)
+        .select_related('author', 'category')[:3]
+    )
+    request.seo_overrides = {
+        'seo_title': f'{shayari.title} | {shayari.get_language_display()} Shayari | Lafzloom',
+        'seo_description': description or f'Read {shayari.title} on Lafzloom.',
+        'seo_author': shayari.author.username,
+        'seo_robots': 'index, follow' if shayari.approved else 'noindex, nofollow',
+        'canonical_url': canonical_url.replace('http://', 'https://', 1),
+        'seo_og_type': 'article',
+        'seo_og_locale': shayari.language,
+        'seo_breadcrumbs': breadcrumbs,
+        'seo_jsonld_extra': {
+            '@context': 'https://schema.org',
+            '@type': 'CreativeWork',
+            'url': canonical_url.replace('http://', 'https://', 1),
+            'headline': shayari.title,
+            'text': shayari.text,
+            'author': {'@type': 'Person', 'name': shayari.author.username},
+            'datePublished': shayari.created_at.isoformat(),
+            'dateModified': shayari.updated_at.isoformat(),
+            'inLanguage': shayari.language,
+            'isPartOf': {'@type': 'WebSite', 'name': 'Lafzloom'},
+        },
+    }
+    return render(request, 'shayari/detail.jinja', {
+        'shayari': shayari,
+        'related_shayaris': related_shayaris,
+    })
 
 
 def _can_manage_shayari(user, shayari):

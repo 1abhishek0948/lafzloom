@@ -1,0 +1,17 @@
+{% if seo_breadcrumbs %}
+<nav class="mb-6 text-sm text-slate-400" aria-label="Breadcrumb">
+  <ol class="flex flex-wrap items-center gap-2">
+    <li><a class="hover:text-white" href="{{ url('home') }}">Home</a></li>
+    {% for crumb in seo_breadcrumbs %}
+      <li aria-hidden="true">/</li>
+      <li>
+        {% if loop.last %}
+          <span aria-current="page">{{ crumb.name }}</span>
+        {% else %}
+          <a class="hover:text-white" href="{{ crumb.url }}">{{ crumb.name }}</a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+</nav>
+{% endif %}

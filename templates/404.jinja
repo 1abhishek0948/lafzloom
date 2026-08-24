@@ -1,0 +1,15 @@
+{% extends 'base.jinja' %}
+
+{% block title %}{{ seo_title }}{% endblock %}
+
+{% block content %}
+<section class="max-w-2xl" aria-labelledby="not-found-title">
+  <p class="tag">404</p>
+  <h1 id="not-found-title" class="text-3xl sm:text-4xl font-display">Page not found</h1>
+  <p class="mt-4 text-slate-300">The page you requested does not exist or is no longer available.</p>
+  <div class="mt-6 flex flex-wrap gap-3">
+    <a class="btn-primary" href="{{ url('home') }}">Go to Lafzloom home</a>
+    <a class="btn-ghost" href="{{ url('shayari:list') }}">Browse shayari</a>
+  </div>
+</section>
+{% endblock %}

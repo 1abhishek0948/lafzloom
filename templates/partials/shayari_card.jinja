@@ -1,7 +1,7 @@
-<div class="card self-start">
+<article class="card self-start">
   <div class="flex items-start justify-between">
     <div>
-      <p class="text-sm text-slate-400">{{ shayari.category.name }} · {{ shayari.created_at|date('M d, Y') }}</p>
+      <p class="text-sm text-slate-400"><a class="hover:text-white" href="{{ url('category', category_slug=shayari.category.slug) }}">{{ shayari.category.name }}</a> · <time datetime="{{ shayari.created_at.isoformat() }}">{{ shayari.created_at|date('M d, Y') }}</time></p>
       <h3 class="mt-1 text-xl font-display">
         <a class="hover:underline" href="{{ url('shayari:detail', pk=shayari.pk) }}">{{ shayari.title }}</a>
       </h3>
@@ -20,4 +20,4 @@
   </div>
   <p class="mt-3 text-xs text-slate-400">{{ t('by') }} @{{ shayari.author.username }}</p>
   <div class="translation-output mt-3 hidden"></div>
-</div>
+</article>

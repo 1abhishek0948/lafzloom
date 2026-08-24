@@ -1,8 +1,9 @@
 {% extends 'base.jinja' %}
 
-{% block title %}{{ shayari.title }} | Lafzloom{% endblock %}
+{% block title %}{{ seo_title }}{% endblock %}
 
 {% block content %}
+{% include 'partials/breadcrumbs.jinja' %}
 <article class="card-glow">
   <div class="flex items-start justify-between">
     <div>
@@ -39,4 +40,14 @@
 
   <div class="translation-output mt-6 hidden"></div>
 </article>
+{% if related_shayaris %}
+<section class="mt-10" aria-labelledby="related-shayari-title">
+  <h2 id="related-shayari-title" class="section-title">Related {{ shayari.category.name }} Shayari</h2>
+  <div class="mt-4 grid md:grid-cols-2 gap-6 items-start">
+    {% for shayari in related_shayaris %}
+      {% include 'partials/shayari_card.jinja' %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
 {% endblock %}

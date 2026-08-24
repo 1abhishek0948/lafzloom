@@ -11,8 +11,8 @@ class CategorySerializer(serializers.ModelSerializer):
 class ShayariSerializer(serializers.ModelSerializer):
     author_username = serializers.CharField(source='author.username', read_only=True)
     category_name = serializers.CharField(source='category.name', read_only=True)
-    likes_count = serializers.IntegerField(source='likes_count', read_only=True)
-    saves_count = serializers.IntegerField(source='saves_count', read_only=True)
+    likes_count = serializers.IntegerField(read_only=True)
+    saves_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Shayari
