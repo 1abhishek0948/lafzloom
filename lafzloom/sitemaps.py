@@ -1,4 +1,5 @@
 from django.contrib.sitemaps import Sitemap
+from django.db.models import OuterRef, Subquery
 from django.urls import reverse
 
 from shayari.models import Category, Shayari
@@ -14,7 +15,11 @@ class StaticSitemap(Sitemap):
         return reverse(item)
 
     def priority(self, item):
-        return 1.0 if item == 'home' else 0.6
+        if item == 'home':
+            return 1.0
+        if item == 'shayari:list':
+            return 0.9
+        return 0.5
 
 
 class ShayariSitemap(Sitemap):
@@ -32,14 +37,26 @@ class ShayariSitemap(Sitemap):
 
 
 class CategorySitemap(Sitemap):
-    changefreq = 'weekly'
-    priority = 0.6
+    changefreq = 'daily'
+    priority = 0.8
 
     def items(self):
-        return Category.objects.filter(shayaris__approved=True).distinct()
+        latest = (
+            Shayari.objects.filter(category=OuterRef('pk'), approved=True)
+            .order_by('-updated_at')
+            .values('updated_at')[:1]
+        )
+        return (
+            Category.objects.filter(shayaris__approved=True)
+            .distinct()
+            .annotate(latest_shayari_at=Subquery(latest))
+        )
 
     def location(self, item):
         return reverse('category', kwargs={'category_slug': item.slug})
+
+    def lastmod(self, item):
+        return item.latest_shayari_at
 
 
 def sitemap_items():

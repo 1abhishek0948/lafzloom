@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.paginator import Paginator
+from django.db.models import Count, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -69,9 +70,7 @@ def google_site_verification(request):
 
 def robots_txt(request):
     sitemap_url = absolute_url(request, reverse('sitemap'))
-    content = '\n'.join([
-        'User-agent: *',
-        'Allow: /',
+    private_rules = [
         'Disallow: /admin/',
         'Disallow: /accounts/',
         'Disallow: /moderation/',
@@ -81,10 +80,93 @@ def robots_txt(request):
         'Disallow: /shayari/submit/',
         'Disallow: /shayari/*/edit/',
         'Disallow: /shayari/*/delete/',
+    ]
+    ai_crawlers = [
+        'GPTBot',
+        'OAI-SearchBot',
+        'ChatGPT-User',
+        'ClaudeBot',
+        'Claude-Web',
+        'PerplexityBot',
+        'Perplexity-User',
+        'Google-Extended',
+        'Applebot',
+        'Applebot-Extended',
+        'Amazonbot',
+        'meta-externalagent',
+        'CCBot',
+    ]
+    content = [
+        '# robots.txt for Lafzloom',
+        '',
+        '# All crawlers',
+        'User-agent: *',
+        'Allow: /',
+        *private_rules,
+        '',
+        '# Search engine crawlers (explicitly allowed)',
+        'User-agent: Googlebot',
+        'Allow: /',
+        'User-agent: Bingbot',
+        'Allow: /',
+        '',
+        '# AI/LLM crawlers (explicitly allowed so shayari can be cited in AI answers)',
+    ]
+    for bot in ai_crawlers:
+        content.extend([f'User-agent: {bot}', 'Allow: /'])
+    content.extend([
+        '',
         f'Sitemap: {sitemap_url}',
         '',
     ])
-    return HttpResponse(content, content_type='text/plain')
+    return HttpResponse('\n'.join(content), content_type='text/plain')
+
+
+def llms_txt(request):
+    home_url = absolute_url(request, '/')
+    browse_url = absolute_url(request, reverse('shayari:list'))
+    categories = (
+        Category.objects.filter(shayaris__approved=True)
+        .annotate(approved_count=Count('shayaris', filter=Q(shayaris__approved=True)))
+        .order_by('-approved_count')
+    )
+    lines = [
+        f'# {settings.SITE_NAME}',
+        '',
+        f'> {settings.SEO_DEFAULT_DESCRIPTION}',
+        '',
+        f'{settings.SITE_NAME} is a multilingual shayari and poetry platform available in English, Hindi, and Urdu. '
+        'Visitors can browse human-moderated, community-submitted shayari by category, author, or popularity. '
+        'Registered users can submit shayari, like, save, and curate collections.',
+        '',
+        '## Pages',
+        '',
+        f'- [Home]({home_url}): Latest approved shayari and featured categories.',
+        f'- [Browse Shayari]({browse_url}): Full shayari library with search, category, author, and popularity filters.',
+        f'- [About]({absolute_url(request, reverse("about"))}): What Lafzloom is and how it works.',
+        f'- [Contact]({absolute_url(request, reverse("contact"))}): Support and inquiries.',
+        f'- [Privacy Policy]({absolute_url(request, reverse("privacy"))}): Data handling and privacy practices.',
+        f'- [Terms of Service]({absolute_url(request, reverse("terms"))}): Rules for using Lafzloom.',
+        '',
+        '## Categories',
+        '',
+    ]
+    for category in categories:
+        description = category.description or f'{category.name} shayari and poetry'
+        category_url = absolute_url(request, reverse('category', kwargs={'category_slug': category.slug}))
+        lines.append(
+            f'- [{category.name}]({category_url}): {description} '
+            f'({category.approved_count} approved shayari).'
+        )
+    lines.extend([
+        '',
+        '## Notes',
+        '',
+        '- All shayari are reviewed by human moderators before appearing publicly.',
+        '- Content is written in Hindi, English, and Urdu; the interface supports all three languages.',
+        '- Shayari detail pages include the full text, author, category, and like/save counts.',
+    ])
+    return HttpResponse('\n'.join(lines) + '\n', content_type='text/plain; charset=utf-8')
 
 
 def error_404(request, exception):

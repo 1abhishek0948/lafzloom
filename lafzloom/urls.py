@@ -12,6 +12,7 @@ urlpatterns = [
     path('', home, name='home'),
     path('healthz/', static_views.healthz, name='healthz'),
     path('robots.txt', static_views.robots_txt, name='robots_txt'),
+    path('llms.txt', static_views.llms_txt, name='llms_txt'),
     path('google2edb0a36fd4a1449.html', static_views.google_site_verification, name='google_site_verification'),
     path('sitemap.xml', sitemap, {'sitemaps': sitemap_items()}, name='sitemap'),
     path('privacy/', static_views.privacy, name='privacy'),
