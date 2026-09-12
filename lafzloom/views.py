@@ -62,6 +62,11 @@ def healthz(request):
     return JsonResponse({'status': 'ok'})
 
 
+def google_site_verification(request):
+    content = 'google-site-verification: google2edb0a36fd4a1449.html'
+    return HttpResponse(content, content_type='text/html')
+
+
 def robots_txt(request):
     sitemap_url = absolute_url(request, reverse('sitemap'))
     content = '\n'.join([
