@@ -600,7 +600,7 @@ python manage.py createsuperuser
 
 ## SEO and Discoverability
 
-The application has page titles, viewport metadata, and a favicon. It does not currently implement meta descriptions, canonical URLs, Open Graph or Twitter card metadata, structured data, a sitemap, or `robots.txt`. These are reasonable follow-up improvements for a public poetry and shayari site.
+The application uses a centralized SEO context processor for page titles, descriptions, canonical URLs, robots directives, Open Graph and Twitter/X cards, JSON-LD, breadcrumbs, verification tags, `robots.txt`, and a dynamic sitemap. Public approved categories and shayari are included in the sitemap; search/filter URLs and private application areas are excluded from indexing. Set `SITE_URL` to the production HTTPS origin before deployment so canonical, sitemap, and social URLs are stable.
 
 This README uses repository-confirmed terms such as `Django`, `Python`, `PostgreSQL`, `Django REST Framework`, `shayari`, `poetry`, `Hindi`, `English`, `Urdu`, and `translation API` naturally. Documentation cannot guarantee search rankings; discoverability also depends on application SEO, content quality, accessibility, links, activity, and search-engine indexing.
 

@@ -55,8 +55,8 @@ def shayari_list(request):
     page = Paginator(shayaris, 12).get_page(request.GET.get('page'))
     browse_is_indexable = not any(key in request.GET for key in ('q', 'author', 'category', 'sort'))
     canonical_path = reverse('shayari:list')
-    if browse_is_indexable and request.GET.get('page'):
-        canonical_path = f'{canonical_path}?page={request.GET["page"]}'
+    if browse_is_indexable and request.GET.get('page') and page.number > 1:
+        canonical_path = f'{canonical_path}?page={page.number}'
     context = {
         'seo_title': 'Browse Shayari and Poetry | Lafzloom',
         'seo_description': 'Browse shayari by title, author, category, language, or popularity on Lafzloom.',
@@ -82,7 +82,7 @@ def shayari_list(request):
 
 
 def category_legacy_redirect(request, category_slug):
-    return redirect(f'{reverse("shayari:list")}?category={category_slug}')
+    return redirect(f'{reverse("shayari:list")}?category={category_slug}', permanent=True)
 
 
 def shayari_detail(request, pk):
@@ -115,6 +115,7 @@ def shayari_detail(request, pk):
         'canonical_url': canonical_url.replace('http://', 'https://', 1),
         'seo_og_type': 'article',
         'seo_og_locale': shayari.language,
+        'seo_og_image_alt': f'{shayari.title} by {shayari.author.username}',
         'seo_breadcrumbs': breadcrumbs,
         'seo_jsonld_extra': {
             '@context': 'https://schema.org',

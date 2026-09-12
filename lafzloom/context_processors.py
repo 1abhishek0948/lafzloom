@@ -1,4 +1,4 @@
-from urllib.parse import urlunsplit
+from urllib.parse import urlencode, urlunsplit
 
 from django.conf import settings
 from django.urls import reverse
@@ -69,7 +69,12 @@ def _default_seo(request):
 
     canonical_path = urlunsplit(('', '', path, '', ''))
     if path == '/shayari/' and set(query) == {'page'}:
-        canonical_path = f'{canonical_path}?page={query["page"]}'
+        try:
+            page_number = max(1, int(query['page']))
+        except (TypeError, ValueError):
+            page_number = 1
+        if page_number > 1:
+            canonical_path = f'{canonical_path}?{urlencode({"page": page_number})}'
 
     return {
         'seo_title': title,
@@ -80,6 +85,7 @@ def _default_seo(request):
         'canonical_url': _absolute_url(request, canonical_path),
         'seo_image_url': _absolute_url(request, image_path),
         'seo_og_type': 'website',
+        'seo_og_image_alt': f'{settings.SITE_NAME} logo',
         'seo_og_locale': request.LANGUAGE_CODE.replace('-', '_'),
         'seo_schema_type': schema_type,
         'seo_breadcrumbs': [

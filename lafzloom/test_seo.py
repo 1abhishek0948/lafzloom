@@ -56,6 +56,12 @@ class SeoTests(TestCase):
         self.assertIn('A published verse', detail_response.content.decode())
         self.assertIn('CreativeWork', detail_response.content.decode())
 
+    def test_empty_category_is_not_indexable(self):
+        empty_category = Category.objects.create(name='Empty')
+        response = self.client.get(f'/category/{empty_category.slug}/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('noindex, follow', response.content.decode())
+
     def test_search_and_private_pages_are_not_indexable(self):
         search_response = self.client.get('/shayari/?q=love')
         self.assert_seo_head(search_response, robots='noindex, follow')
@@ -81,3 +87,13 @@ class SeoTests(TestCase):
         response = self.client.get('/does-not-exist/')
         self.assertEqual(response.status_code, 404)
         self.assertIn('noindex, nofollow', response.content.decode())
+
+    def test_social_image_and_error_page_metadata(self):
+        response = self.client.get('/')
+        body = response.content.decode()
+        self.assertIn('og:image:alt', body)
+        self.assertIn('summary_large_image', body)
+
+        error_response = self.client.get('/does-not-exist/')
+        self.assertEqual(error_response.status_code, 404)
+        self.assertIn('Browse shayari', error_response.content.decode())

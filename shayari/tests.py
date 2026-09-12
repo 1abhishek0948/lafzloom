@@ -61,7 +61,7 @@ class ShayariApiTests(TestCase):
 
     def test_legacy_category_url_redirects_to_query_param(self):
         response = self.client.get('/shayari/category/love/', follow=False)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 301)
         self.assertEqual(response['Location'], '/shayari/?category=love')
 
 

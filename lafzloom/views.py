@@ -9,7 +9,7 @@ from shayari.models import Category, Shayari
 
 def absolute_url(request, path):
     if settings.SITE_URL:
-        return f'{settings.SITE_URL}{path}'
+        return f'{settings.SITE_URL.rstrip("/")}{path}'
     return request.build_absolute_uri(path).replace('http://', 'https://', 1)
 
 
@@ -38,15 +38,17 @@ def category_detail(request, category_slug):
         12,
     ).get_page(request.GET.get('page'))
     canonical = absolute_url(request, reverse('category', kwargs={'category_slug': category.slug}))
-    if request.GET.get('page'):
+    if request.GET.get('page') and page.number > 1:
         canonical = f'{canonical}?page={page.number}'
+    category_url = absolute_url(request, reverse('category', kwargs={'category_slug': category.slug}))
     request.seo_overrides = {
         'seo_title': f'{category.name} Shayari and Poetry | Lafzloom',
         'seo_description': category.description or f'Read the latest {category.name} shayari and poetry shared on Lafzloom.',
+        'seo_robots': 'index, follow' if page.paginator.count else 'noindex, follow',
         'canonical_url': canonical,
         'seo_breadcrumbs': [
             {'name': 'Shayari', 'url': absolute_url(request, reverse('shayari:list')), 'position': 1},
-            {'name': category.name, 'url': canonical, 'position': 2},
+            {'name': category.name, 'url': category_url, 'position': 2},
         ],
     }
     return render(request, 'shayari/category.jinja', {
@@ -61,8 +63,7 @@ def healthz(request):
 
 
 def robots_txt(request):
-    site_url = settings.SITE_URL or request.build_absolute_uri('/').rstrip('/')
-    hostname = site_url.split('://', 1)[-1].rstrip('/')
+    sitemap_url = absolute_url(request, reverse('sitemap'))
     content = '\n'.join([
         'User-agent: *',
         'Allow: /',
@@ -75,7 +76,7 @@ def robots_txt(request):
         'Disallow: /shayari/submit/',
         'Disallow: /shayari/*/edit/',
         'Disallow: /shayari/*/delete/',
-        f'Sitemap: https://{hostname}/sitemap.xml',
+        f'Sitemap: {sitemap_url}',
         '',
     ])
     return HttpResponse(content, content_type='text/plain')
@@ -88,3 +89,12 @@ def error_404(request, exception):
         'seo_robots': 'noindex, nofollow',
     }
     return render(request, '404.jinja', status=404)
+
+
+def error_500(request):
+    request.seo_overrides = {
+        'seo_title': 'Something Went Wrong | Lafzloom',
+        'seo_description': 'Lafzloom is temporarily unable to complete this request.',
+        'seo_robots': 'noindex, nofollow',
+    }
+    return render(request, '500.jinja', status=500)
