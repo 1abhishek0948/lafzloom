@@ -9,7 +9,8 @@
 Lafzloom is a poetry web application built with Python, Django, Django REST Framework, PostgreSQL, Jinja2, and Tailwind CSS. It gives readers a focused way to browse shayari by category, author, language, or popularity, while signed-in users can publish verses, like and save content, and manage their collections. The project also exposes REST endpoints, JWT authentication, and a pluggable translation service for Hindi, English, and Urdu content.
 
 The repository contains the application source, migrations, templates, static assets, automated tests, a Docker Compose stack, and a Render Blueprint. It does not currently include a public demo URL or a repository license file.
-https://lafzloom.onrender.com/
+
+LIVE LINK: https://lafzloom.onrender.com/
 
 ## Contents
 
